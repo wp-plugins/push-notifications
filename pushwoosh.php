@@ -46,13 +46,13 @@
 
  		$type = $post->post_type;
 
- 		$label = 'Send push on publish ' . $type;
+ 		$label = sprintf('Send a push notification when the %s is published', $type);
  		$placeholder = 'Text message';
  		$checked = 'checked="checked"';
  		$message_content = '';
 
  		if ($action == 'edit') {
- 			$label = 'Send push on update ' . $type;
+ 			$label = sprintf('Send a push notification when the %s is updated', $type);
  			$checked = '';
  			$message_content = get_post_meta($post->ID, 'pushwoosh_message_content', true);
  		}

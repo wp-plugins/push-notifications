@@ -1,14 +1,5 @@
 <?php
 
- 	/**
- 	 *	Plugin Name: Pushwoosh
- 	 *	Plugin URI: http://pushwoosh.com
- 	 *	Description: Push notifications plugin for wordpress by Pushwoosh
- 	 *	Version: 1.0.0
- 	 *	Author: Arello Mobile
- 	 *	Author URI: http://www.arello-mobile.com/
- 	 */
-
 
 namespace pushwoosh;
 
@@ -22,7 +13,7 @@ class Config {
 	public $page = array(
 		'name' => __NAMESPACE__,
 		'title' => 'Pushwoosh',
-		'intro_text' => 'Push notifications plugin for WordPress by <a href="http://www.pushwoosh.com">Pushwoosh</a>. Please note this plugin uses Pushwoosh Remote API. You must have a <a href="http://www.pushwoosh.com/accounts-comparison/">Premium Account</a> on Pushwoosh to use this plugin. Contact us via the website for Trial period.',
+		'intro_text' => 'Configuration options for Pushwoosh, you must have a <a href="http://www.pushwoosh.com/accounts-comparison/">Premium account</a> with Pushwoosh to use this plugin',
 		'menu_title' => 'Pushwoosh'
 	);
 
@@ -34,11 +25,11 @@ class Config {
 			'fields' => array(
 				'application_code' => array(
 					'label' => 'Application code',
-					'description' => 'Your Pushwoosh application code',
+					'description' => 'Your Pushwoosh Application Code',
 				),
 				'api_token' => array(
 					'label' => 'API token',
-					'description' => 'Your Pushwoosh api token',
+					'description' => 'Your Pushwoosh Api Access Token',
 				)
 			)
 		),

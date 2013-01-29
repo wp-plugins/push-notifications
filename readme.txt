@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Pushwoosh ===
 Contributors: Pushwoosh
 Website link: http://www.pushwoosh.com
 Tags: pushwoosh, push notifications, push
