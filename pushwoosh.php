@@ -3,7 +3,7 @@
  	 *	Plugin Name: Pushwoosh
  	 *	Plugin URI: http://pushwoosh.com
  	 *	Description: Push notifications plugin for wordpress by Pushwoosh
- 	 *	Version: 1.0.0
+ 	 *	Version: 1.1.0
  	 *	Author: Arello Mobile
  	 *	Author URI: http://www.arello-mobile.com/
  	 */
