@@ -1,17 +1,14 @@
 <?php
 
 
-namespace pushwoosh;
-
-
-class Config {
+class PushwooshConfig {
 
 	
-	public $group = __NAMESPACE__;
+	public $group = 'pushwoosh';
 
 
 	public $page = array(
-		'name' => __NAMESPACE__,
+		'name' => 'pushwoosh',
 		'title' => 'Pushwoosh',
 		'intro_text' => 'Configuration options for Pushwoosh, you must have a <a href="http://www.pushwoosh.com/accounts-comparison/">Premium account</a> with Pushwoosh to use this plugin',
 		'menu_title' => 'Pushwoosh'
@@ -37,7 +34,7 @@ class Config {
 }
 
 
-class SectionHelper {
+class PushwooshSectionHelper {
 
 
 	protected $_sections;
@@ -76,15 +73,15 @@ class SectionHelper {
 }
 
 
-class Settings {
+class PushwooshSettings {
 
 
 	protected $_config;
 
 
 	public function __construct() {
-		$this->_config = get_class_vars(sprintf('\%s\config',__NAMESPACE__));
-		$this->_section = new SectionHelper($this->_config['sections']);
+		$this->_config = get_class_vars('PushwooshConfig');
+		$this->_section = new PushwooshSectionHelper($this->_config['sections']);
 		$this->initialize();
 	}
 
@@ -169,4 +166,4 @@ class Settings {
 	}
 }
 
-new \pushwoosh\Settings();
+new PushwooshSettings();

@@ -66,7 +66,7 @@
  		$application_code = get_option('pushwoosh_application_code', array('text_string' => null));
  		$api_token = get_option('pushwoosh_api_token', array('text_string' => null));
 
- 		$pushwoosh  = new pushwoosh\PushWoosh(array('auth' => $api_token['text_string']));
+ 		$pushwoosh  = new PushWoosh(array('auth' => $api_token['text_string']));
 
  		try {
 	 		$pushwoosh->createMessage(

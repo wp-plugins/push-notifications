@@ -8,12 +8,10 @@
  	 *	Author URI: http://www.arello-mobile.com/
  	 */
 
-namespace pushwoosh;
-
-class InternalErrorException extends \Exception {
+class PushwooshInternalErrorException extends Exception {
 }
 
-class BadRequestException extends \Exception {
+class PushwooshBadRequestException extends Exception {
 }
 
 class PushWoosh {
@@ -40,22 +38,22 @@ class PushWoosh {
 		$url = $this->settings['server'] . $method;
 		$ctx = stream_context_create($params);
 		if (!($fp = @fopen($url, 'rb', false, $ctx))) {
-			throw new InternalErrorException('Connection to PushWoosh failed');
+			throw new PushwooshInternalErrorException('Connection to PushWoosh failed');
 		}
 		$response = @stream_get_contents($fp);
 		if (!$response) {
-			throw new InternalErrorException('stream_get_contents() failed');
+			throw new PushwooshInternalErrorException('stream_get_contents() failed');
 		}
 		$response = json_decode($response, true);		
 		if (!is_array($response)) {
-			throw new BadRequestException('Failed to parse response from PushWoosh');
+			throw new PushwooshBadRequestException('Failed to parse response from PushWoosh');
 		}
 		if (empty($response['status_code']) || empty($response['status_message'])) {
-			throw new BadRequestException('Bad response format');
+			throw new PushwooshBadRequestException('Bad response format');
 			
 		}		
 		if ($response['status_code'] != 200 || $response['status_message'] != 'OK') {
-			throw new BadRequestException(sprintf('PushWoosh responded with error: %s with code: %s', $response['status_message'], $response['status_code']) );
+			throw new PushwooshBadRequestException(sprintf('PushWoosh responded with error: %s with code: %s', $response['status_message'], $response['status_code']) );
 		}
 		return $response;		
 	}
