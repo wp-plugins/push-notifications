@@ -4,8 +4,8 @@ Website link: http://www.pushwoosh.com
 Tags: pushwoosh, push notifications, push
 Arello Mobile: http://www.arello-mobile.com
 Requires at least: 3.0.1
-Tested up to: 3.5
-Stable tag: 1.1
+Tested up to: 3.7
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,8 @@ http://www.pushwoosh.com
 
 == Changelog ==
 1.1 Support for PHP 5.2
+
+2.0 Integration Safari notifications
 
 == Installation ==
 

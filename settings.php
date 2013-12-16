@@ -1,11 +1,8 @@
 <?php
 
-
 class PushwooshConfig {
 
-	
 	public $group = 'pushwoosh';
-
 
 	public $page = array(
 		'name' => 'pushwoosh',
@@ -13,7 +10,6 @@ class PushwooshConfig {
 		'intro_text' => 'Configuration options for Pushwoosh, you must have a <a href="http://www.pushwoosh.com/accounts-comparison/">Premium account</a> with Pushwoosh to use this plugin',
 		'menu_title' => 'Pushwoosh'
 	);
-
 
 	public $sections = array(
 		'application_access' => array(
@@ -27,18 +23,21 @@ class PushwooshConfig {
 				'api_token' => array(
 					'label' => 'API token',
 					'description' => 'Your Pushwoosh Api Access Token',
+				),
+				'safari_action' => array(
+					'label' => 'Safari Action Button',
+					'description' => 'Your Action Button for Safari',
+					'default'=>'Click Here'
 				)
 			)
-		),
+		)
 	);
 }
 
 
 class PushwooshSectionHelper {
 
-
 	protected $_sections;
-
 
 	public function __construct($sections) {
 		$this->_sections = $sections;
@@ -51,12 +50,11 @@ class PushwooshSectionHelper {
 	public function input_text($value) {
 		$options = get_option($value['name']);
 		$default = (isset($value['default'])) ? $value['default'] : null;
-		echo sprintf(
-			'<input id="%s" type="text" name="%1$s[text_string]" value="%2$s" size="40" /> %3$s%4$s',
+		echo sprintf('<input id="%s" type="text" name="%1$s[text_string]" value="%2$s" size="40" /> %3$s%4$s',
 			$value['name'],
 			(!empty ($options['text_string'])) ? $options['text_string'] : $default,
 			(!empty ($value['suffix'])) ? $value['suffix'] : null,
-			(!empty ($value['description'])) ? sprintf("<br /><em>%s</em>", __($value['description'], 'pushwoosh')) : null);				
+			(!empty ($value['description'])) ? sprintf("<br /><em>%s</em>", __($value['description'], 'pushwoosh')) : null);
 	}
 
 	public function input_submit($value) {
@@ -75,9 +73,7 @@ class PushwooshSectionHelper {
 
 class PushwooshSettings {
 
-
 	protected $_config;
-
 
 	public function __construct() {
 		$this->_config = get_class_vars('PushwooshConfig');
@@ -86,30 +82,37 @@ class PushwooshSettings {
 	}
 
 	protected function initialize() {
+
 		if (!function_exists('add_action')) {
 			return;
 		}
+
 		add_action('admin_init', array($this, 'admin_init'));
 		add_action('admin_menu', array($this, 'admin_add_page'));
 
 		if (!function_exists('add_filter')) {
 			return;
 		}
+
 		$filter = 'plugin_action_links_' . basename(__DIR__) . '/pushwoosh.php';
 		add_filter($filter, array($this, 'admin_add_links'), 10, 4);
 	}
 
 	public function admin_add_links($links, $file) {
-		$settings_link = sprintf(
-			'<a href="options-general.php?page=%s">%s</a>',
+
+		$settings_link = sprintf('<a href="options-general.php?page=%s">%s</a>',
 			$this->_config['page']['name'],
 			__('Settings')
 		);
 		array_unshift($links, $settings_link);
-		return $links;		
+		return $links;
 	}
 
 	public function admin_init() {
+
+		wp_register_script('pushwoosh_js', plugins_url('/js/pushwoosh.js', __FILE__), array(), '1.0');
+		wp_register_style('pushwoosh_css', plugins_url('/css/pushwoosh.css', __FILE__), array(), '1.0');
+
 		foreach ($this->_config['sections'] as $key => $section):
 			add_settings_section(
 				$key,
@@ -138,10 +141,11 @@ class PushwooshSettings {
 					$callback
 				);
 			endforeach;
-		endforeach;		
+		endforeach;
 	}
 
 	public function admin_add_page() {
+
 		$args = array(
 			__($this->_config['page']['title'], 'pushwoosh'),
 			__($this->_config['page']['menu_title'], 'pushwoosh'),
@@ -153,8 +157,8 @@ class PushwooshSettings {
 	}
 
 	public function options_page() {
-		echo sprintf(
-			'<h2>%s</h2><p>%s</p>',
+
+		echo sprintf('<h2>%s</h2><p>%s</p>',
 			__($this->_config['page']['title'], 'pushwoosh'),
 			__($this->_config['page']['intro_text'], 'pushwoosh')
 		);

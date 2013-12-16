@@ -1,32 +1,33 @@
 <?php
+
  	/**
  	 *	Plugin Name: Pushwoosh
  	 *	Plugin URI: http://pushwoosh.com
  	 *	Description: Pushwoosh API lib for wordpress
- 	 *	Version: 1.1.0
+ 	 *	Version: 2.0.0
  	 *	Author: Arello Mobile
  	 *	Author URI: http://www.arello-mobile.com/
  	 */
 
 class PushwooshInternalErrorException extends Exception {
+
 }
 
 class PushwooshBadRequestException extends Exception {
+
 }
 
 class PushWoosh {
-	
-	
+
 	protected $settings = array(
 		'server' => 'https://cp.pushwoosh.com/json/1.3/',
-		'auth' => '',
+		'auth' => ''
 	);
-	
-	
+
 	public function __construct($settings = array()) {
 		$this->settings = array_merge($this->settings, $settings);
 	}
-	
+
 	public function request($method, $data = array()) {
 		$params = array(
 			'http' => array(
@@ -37,13 +38,13 @@ class PushWoosh {
 		);
 		$url = $this->settings['server'] . $method;
 		$ctx = stream_context_create($params);
-		if (!($fp = @fopen($url, 'rb', false, $ctx))) {
+		if (!($response = file_get_contents($url, false, $ctx))) {
 			throw new PushwooshInternalErrorException('Connection to PushWoosh failed');
 		}
-		$response = @stream_get_contents($fp);
 		if (!$response) {
 			throw new PushwooshInternalErrorException('stream_get_contents() failed');
 		}
+
 		$response = json_decode($response, true);		
 		if (!is_array($response)) {
 			throw new PushwooshBadRequestException('Failed to parse response from PushWoosh');
@@ -71,13 +72,57 @@ class PushWoosh {
 				'en' => '',
 			)
 		);
-		if (!isset($options[0])) {
+		if (!is_array($options) || !isset($options[0])) {
 			$options = array($options);
 		}
 		foreach ($options as $message) {
 			$body['notifications'][] = $message + $messageDefault;
 		}
 		return $this->request('createMessage', $body);		
+	}
+	public function compileDevicesFilter($applicationCode, $tags = array()) {
+		$conditions = array('A("' . $applicationCode . '")');
+		if (!count($tags)) {
+			return $conditions[0];
+		}
+		foreach ($tags as $condition) {
+			$value = $condition['value'];
+			if (empty($condition['type'])) {
+				continue;
+			}
+			switch ($condition['type']) {
+			case 1:
+				if (is_array($value)) {
+					$value = array_map('intval', $value);
+				} else {
+					$value = intval($value);
+				}
+				break;
+			case 2:
+			case 3:
+				if ($condition['operator'] == 'IN') {
+					$value = explode(',', $value);
+				}
+				break;
+			}
+			$tmp = array('"' . $condition['name'] . '"', $condition['operator'], json_encode($value));
+			$conditions[] = 'T(' . implode(', ', $tmp) . ')';
+		}
+		return implode(' * ', $conditions);
+	}
+
+	public function createTargetedMessage($applicationCode, $message = array(), $options = array()) {
+		$body = array(
+			'auth' => $this->settings['auth'],
+			'send_date' => 'now',
+			'content' => array(
+				'en' => ''
+				)
+			);
+        $body = array_merge($body, $options);
+		$body = array_merge($body, $message);
+        $body['devices_filter'] = $this->compileDevicesFilter($applicationCode, array());
+		return $this->request('createTargetedMessage', $body);
 	}
 
 	public function removeMessage($id) {
@@ -87,4 +132,5 @@ class PushWoosh {
 		);
 		return $this->request('deleteMessage', $body);
 	}
+
 }
