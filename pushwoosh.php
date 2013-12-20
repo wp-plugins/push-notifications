@@ -156,6 +156,7 @@
 			}
 		}
 		$options['safari_title'] = stripslashes($options['safari_title']);
+        $message_content = stripslashes($message_content);
 		$post = get_post($post_id);
 		if ($post->post_status !== 'publish') {
 			return;
