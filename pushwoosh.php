@@ -4,7 +4,6 @@
  	 * Plugin Name: Pushwoosh
  	 * Plugin URI: http://pushwoosh.com
  	 * Description: Push notifications plugin for wordpress by Pushwoosh
- 	 * Version: 2.0.0
  	 * Author: Arello Mobile
  	 * Author URI: http://www.arello-mobile.com/
 	 *
@@ -71,7 +70,6 @@
 			$message_content = get_post_meta($post->ID, 'pushwoosh_message_content', true);
 			$safari_title = get_post_meta($post->ID, 'safari_title', true);
 		}
-
 		$plugin_content = file_get_contents(plugins_url('/html/pushwoosh.html', __FILE__));
 		echo sprintf($plugin_content,
 			$safari_title,
@@ -104,7 +102,10 @@
 
  	function pushwoosh_save_post($post_id) {
 
-		if (array_key_exists('action', $_GET) && $_GET['action']=='-1') {
+		/*
+		 * if update many posts, don't send push
+		 */
+		if (array_key_exists('post_status', $_GET) && $_GET['post_status']=='all') {
 			return;
 		}
 
@@ -156,7 +157,7 @@
 			}
 		}
 		$options['safari_title'] = stripslashes($options['safari_title']);
-        $message_content = stripslashes($message_content);
+		$message_content = stripslashes($message_content);
 		$post = get_post($post_id);
 		if ($post->post_status !== 'publish') {
 			return;

@@ -4,7 +4,6 @@
  	 *	Plugin Name: Pushwoosh
  	 *	Plugin URI: http://pushwoosh.com
  	 *	Description: Pushwoosh API lib for wordpress
- 	 *	Version: 2.0.0
  	 *	Author: Arello Mobile
  	 *	Author URI: http://www.arello-mobile.com/
  	 */
@@ -40,9 +39,6 @@ class PushWoosh {
 		$ctx = stream_context_create($params);
 		if (!($response = file_get_contents($url, false, $ctx))) {
 			throw new PushwooshInternalErrorException('Connection to PushWoosh failed');
-		}
-		if (!$response) {
-			throw new PushwooshInternalErrorException('stream_get_contents() failed');
 		}
 
 		$response = json_decode($response, true);		
