@@ -1,13 +1,5 @@
 <?php
 
- 	/**
- 	 *	Plugin Name: Pushwoosh
- 	 *	Plugin URI: http://pushwoosh.com
- 	 *	Description: Pushwoosh API lib for wordpress
- 	 *	Author: Arello Mobile
- 	 *	Author URI: http://www.arello-mobile.com/
- 	 */
-
 class PushwooshInternalErrorException extends Exception {
 
 }
