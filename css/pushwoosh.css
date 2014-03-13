@@ -35,4 +35,9 @@
 
 #pushwoosh_message_content {
     width: 100%;
+    height: 100px;
+}
+
+.pushwoosh-api-token-input {
+    width: 50%;
 }
