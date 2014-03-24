@@ -5,7 +5,7 @@ Tags: pushwoosh, push notifications, push
 Arello Mobile: http://www.arello-mobile.com
 Requires at least: 3.0.1
 Tested up to: 3.8.1
-Stable tag: 2.3
+Stable tag: 2.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,12 @@ Please see the <a href="http://www.pushwoosh.com/programming-push-notification/w
 = 2.3 =
 * Added default Safari title field in plugin settings.
 * If Safari message field is empty, Wordpress post title is used as a push text.
+
+= 2.3.1 =
+* Fixed version
+
+= 2.3.2 =
+* Fixed plugin conflict
 
 == Installation ==
 1. Download the Pushwoosh plugin.
