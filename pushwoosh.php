@@ -2,16 +2,16 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.2
+     * @version 2.3.3
      */
 
     /**
     * Plugin Name: Pushwoosh
-    * Plugin URI: http://pushwoosh.com
+    * Plugin URI: http://wordpress.org/plugins/push-notifications/
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.2
+    * Version: 2.3.3
     *
     * Copyright 2013 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -64,7 +64,7 @@
 		wp_nonce_field(plugin_basename( __FILE__ ), 'pushwoosh_post_nonce');
 		$post_type = $post->post_type;
 		$checkbox_label = sprintf('Send a push notification when the %s is published', htmlentities($post_type));
-		$textarea_placeholder = 'Text message';
+		$textarea_placeholder = 'Input text of the push here, otherwise, the post title will be used.';
 		$safari_title_placeholder = 'Safari title';
 		$checkbox_checked = 'checked="checked"';
 		$message_content = '';
@@ -93,6 +93,16 @@
 		$api_token = get_option('pushwoosh_api_token', array('text_string' => null));
 		$safari_action = get_option('pushwoosh_safari_action', array('text_string' => null));
 		$options['safari_action'] = $safari_action['text_string'];
+		if ($options['safari_title'] == '') {
+			$safari_title = get_option('pushwoosh_safari_title', array('text_string' => null));
+			if (empty($safari_title['text_string'])) {
+				$site_url = get_option('siteurl');
+				$options['safari_title'] = $site_url;
+			} else {
+				$options['safari_title'] = $safari_title['text_string'];
+			}
+		}
+
 		$pushwoosh  = new PushWoosh(array('auth' => $api_token['text_string']));
 
 		try {
@@ -130,43 +140,48 @@
 		}
 
 		$options['safari_url_args'] = array($post_url);
+		
 		$post = null;
 
 		if (!empty($_POST)) {
 			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
 				return;
 			}
-	 		if (!isset($_POST['pushwoosh_post_nonce'])) {
-	 			return;
-	 		}
-	 		if (!wp_verify_nonce($_POST['pushwoosh_post_nonce'], plugin_basename( __FILE__ ))) {
-	 			return;
-	 		}
-	 		if (empty($_POST['pushwoosh_message_content']) || empty($_POST['pushwoosh_send_push'])) {
-	 			return;
-	 		}
+
+			if (!isset($_POST['pushwoosh_post_nonce'])) {
+				return;
+			}
+			if (!wp_verify_nonce($_POST['pushwoosh_post_nonce'], plugin_basename( __FILE__ ))) {
+				return;
+			}
+			if (empty($_POST['pushwoosh_send_push'])) {
+				return;
+			}
 			if (array_key_exists('safari_title', $_POST)) {
 				$options['safari_title'] = $_POST['safari_title'];
 			} else {
 				$options['safari_title'] = '';
 			}
-
-			$message_content = $_POST['pushwoosh_message_content'];
+			if (array_key_exists('pushwoosh_message_content', $_POST)) {
+				$message_content = $_POST['pushwoosh_message_content'];
+			}
 			update_post_meta($post_id, 'pushwoosh_message_content', $message_content);
 			update_post_meta($post_id, 'safari_title', $options['safari_title']);
 		} else {
 			$message_content = get_post_meta($post_id, 'pushwoosh_message_content', true);
 			$options['safari_title'] = get_post_meta($post_id, 'safari_title', true);
-
-			if (empty($message_content)) {
-				return;
-			}
 		}
 		$options['safari_title'] = stripslashes($options['safari_title']);
 		$message_content = stripslashes($message_content);
 		$post = get_post($post_id);
-		if ($post->post_status !== 'publish') {
+		if (empty($message_content)) {
+			$message_content = $post->post_title;
+		}
+		if ($post->post_status != 'publish') {
 			return;
 		}
+		if (!array_key_exists('pushwoosh_send_push', $_POST)) {
+				return;
+			}
 		pushwoosh_send_push_by_post($post->ID, $message_content, $options);
 	}

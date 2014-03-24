@@ -6,31 +6,37 @@ class PushwooshConfig {
 
 	public $page = array(
 		'name' => 'pushwoosh',
-		'title' => 'Pushwoosh',
+		'title' => 'Pushwoosh Settings',
 		'intro_text' => 'Configuration options for Pushwoosh, you must have a <a href="http://www.pushwoosh.com/accounts-comparison/">Premium account</a> with Pushwoosh to use this plugin',
 		'menu_title' => 'Pushwoosh'
 	);
 
 	public $sections = array(
 		'application_access' => array(
-			'title' => 'Settings',
 			'description' => 'Please configure the following settings below.',
 			'fields' => array(
-				'application_code' => array(
-					'label' => 'Application code',
-					'description' => 'Your Pushwoosh Application Code',
-				),
 				'api_token' => array(
 					'label' => 'API token',
-					'description' => 'Your Pushwoosh Api Access Token',
-				),
+					'description' => 'API access token from the Pushwoosh control panel (API access token from the 
+					<a href="https://cp.pushwoosh.com/api_access/" target="_blank">Pushwoosh Control Panel</a>).'
+					),
+				'application_code' => array(
+					'label' => 'Application code',
+					'description' => 'Your Pushwoosh application ID you send the message to.',
+					),
+				'safari_title' => array(
+					'label' => 'Safari Title',
+					'description' => 'If you do not wish to manually input Safari Title every time, you can specify 
+					the default title here. If you publish a post with a blank Safari Title field, 
+					the URL of your website is used as default title.'
+					),
 				'safari_action' => array(
 					'label' => 'Safari Action Button',
-					'description' => 'Your Action Button for Safari',
+					'description' => 'Your Action Button for Safari push.',
 					'default'=>'Click Here'
+					),
 				)
 			)
-		)
 	);
 }
 
@@ -48,9 +54,14 @@ class PushwooshSectionHelper {
 	}
 
 	public function input_text($value) {
-		$options = get_option($value['name']);
-		$default = (isset($value['default'])) ? $value['default'] : null;
-		echo sprintf('<input id="%s" type="text" name="%1$s[text_string]" value="%2$s" size="40" /> %3$s%4$s',
+		$api_class = '';
+		if ($value['name'] == 'pushwoosh_api_token') {
+			$api_class = 'pushwoosh-api-token-input';
+		}
+	$options = get_option($value['name']);
+	$default = (isset($value['default'])) ? $value['default'] : null;
+	echo sprintf('<input class="%s" id="%1$s" type="text" name="%2$s[text_string]" value="%3$s" size="40" /> %4$s%5$s',
+			$api_class,
 			$value['name'],
 			(!empty ($options['text_string'])) ? $options['text_string'] : $default,
 			(!empty ($value['suffix'])) ? $value['suffix'] : null,
