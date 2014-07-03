@@ -8,7 +8,7 @@ class PushwooshBadRequestException extends Exception {
 
 }
 
-class PushWoosh {
+class Pushwoosh {
 
 	protected $settings = array(
 		'server' => 'https://cp.pushwoosh.com/json/1.3/',
@@ -30,19 +30,19 @@ class PushWoosh {
 		$url = $this->settings['server'] . $method;
 		$ctx = stream_context_create($params);
 		if (!($response = file_get_contents($url, false, $ctx))) {
-			throw new PushwooshInternalErrorException('Connection to PushWoosh failed');
+			throw new PushwooshInternalErrorException('Connection to Pushwoosh failed');
 		}
 
 		$response = json_decode($response, true);		
 		if (!is_array($response)) {
-			throw new PushwooshBadRequestException('Failed to parse response from PushWoosh');
+			throw new PushwooshBadRequestException('Failed to parse response from Pushwoosh');
 		}
 		if (empty($response['status_code']) || empty($response['status_message'])) {
 			throw new PushwooshBadRequestException('Bad response format');
 			
 		}		
 		if ($response['status_code'] != 200 || $response['status_message'] != 'OK') {
-			throw new PushwooshBadRequestException(sprintf('PushWoosh responded with error: %s with code: %s', $response['status_message'], $response['status_code']) );
+			throw new PushwooshBadRequestException(sprintf('Pushwoosh responded with error: %s with code: %s', $response['status_message'], $response['status_code']) );
 		}
 		return $response;		
 	}

@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.4
+     * @version 2.3.5
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.4
+    * Version: 2.3.5
     *
     * Copyright 2013 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,9 @@
 	}
 
 	add_action('admin_init', 'pushwoosh_add_meta_box');
-	add_action('save_post', 'pushwoosh_save_post');
+	// do not use http://codex.wordpress.org/Plugin_API/Action_Reference/save_post
+	// it can produce twice push send(if another plugins installed)
+	add_action('publish_post', 'pushwoosh_save_post');
 
 	function pushwoosh_message_box($post) {
 
@@ -103,7 +105,7 @@
 			}
 		}
 
-		$pushwoosh  = new PushWoosh(array('auth' => $api_token['text_string']));
+		$pushwoosh  = new Pushwoosh(array('auth' => $api_token['text_string']));
 
 		try {
 			$pushwoosh->createTargetedMessage($application_code['text_string'],
@@ -180,8 +182,5 @@
 		if ($post->post_status != 'publish') {
 			return;
 		}
-		if (!array_key_exists('pushwoosh_send_push', $_POST)) {
-				return;
-			}
 		pushwoosh_send_push_by_post($post->ID, $message_content, $options);
 	}
