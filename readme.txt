@@ -13,7 +13,7 @@ Push notifications plugin for Wordpress by Pushwoosh. Send push notifications wh
 
 == Description ==
 
-Push notifications plugin for WordPress by <a href="http://pushwoosh.com>Pushwoosh</a>. It gives you an ability to send push notifications upon publishing or updating a post or page, using Pushwoosh Remote API.
+Push notifications plugin for WordPress by <a href="http://pushwoosh.com">Pushwoosh</a>. It gives you an ability to send push notifications upon publishing or updating a post or page, using Pushwoosh Remote API.
 
 Please note that you have to have a Premium account with Pushwoosh in order to use the plugin. You have to have mobile app for your wordpress website as well. There are quite a few providers that allows to create such an app. The plugin is also handy to send Safari push notifications to your readers.
 
