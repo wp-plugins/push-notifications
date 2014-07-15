@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.5
+     * @version 2.3.6
      */
 
     /**
@@ -11,9 +11,9 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.5
+    * Version: 2.3.6
     *
-    * Copyright 2013 Arello Mobile (email: support@arello-mobile.com)
+    * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
     * it under the terms of the GNU General Public License as published by
     * the Free Software Foundation; either version 2 of the License, or
@@ -54,7 +54,8 @@
 	add_action('admin_init', 'pushwoosh_add_meta_box');
 	// do not use http://codex.wordpress.org/Plugin_API/Action_Reference/save_post
 	// it can produce twice push send(if another plugins installed)
-	add_action('publish_post', 'pushwoosh_save_post');
+	add_action('publish_post', 'pushwoosh_publish_post');
+	add_action('transition_post_status', 'pushwoosh_save_post');
 
 	function pushwoosh_message_box($post) {
 
@@ -118,7 +119,41 @@
 		update_post_meta($post_id, 'pushwoosh_api_request', $status);
 	}
 
- 	function pushwoosh_save_post($post_id) {
+	function pushwoosh_save_post($newStatus, $oldStatus = null, $post = null) {
+		if (!$post)
+			return;
+		/*
+		 * if update many posts, don't send push
+		 */
+		if (array_key_exists('post_status', $_GET) && $_GET['post_status']=='all') {
+			return;
+		}
+
+		if (!empty($_POST)) {
+			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+				return;
+			}
+
+			if (!isset($_POST['pushwoosh_post_nonce'])) {
+				return;
+			}
+			if (!wp_verify_nonce($_POST['pushwoosh_post_nonce'], plugin_basename( __FILE__ ))) {
+				return;
+			}
+			if (array_key_exists('safari_title', $_POST)) {
+				$options['safari_title'] = $_POST['safari_title'];
+			} else {
+				$options['safari_title'] = '';
+			}
+			if (array_key_exists('pushwoosh_message_content', $_POST)) {
+				$message_content = $_POST['pushwoosh_message_content'];
+			}
+			update_post_meta($post->ID, 'pushwoosh_message_content', $message_content);
+			update_post_meta($post->ID, 'safari_title', $options['safari_title']);
+		}
+	}
+
+ 	function pushwoosh_publish_post($post_id) {
 
 		/*
 		 * if update many posts, don't send push
