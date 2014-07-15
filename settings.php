@@ -13,6 +13,7 @@ class PushwooshConfig {
 
 	public $sections = array(
 		'application_access' => array(
+			'title' => 'Settings',
 			'description' => 'Please configure the following settings below.',
 			'fields' => array(
 				'api_token' => array(
