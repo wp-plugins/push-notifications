@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.6
+     * @version 2.3.7
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.6
+    * Version: 2.3.7
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -55,7 +55,7 @@
 	// do not use http://codex.wordpress.org/Plugin_API/Action_Reference/save_post
 	// it can produce twice push send(if another plugins installed)
 	add_action('publish_post', 'pushwoosh_publish_post');
-	add_action('transition_post_status', 'pushwoosh_save_post');
+	add_action('draft_post', 'pushwoosh_save_post');
 
 	function pushwoosh_message_box($post) {
 
@@ -119,9 +119,7 @@
 		update_post_meta($post_id, 'pushwoosh_api_request', $status);
 	}
 
-	function pushwoosh_save_post($newStatus, $oldStatus = null, $post = null) {
-		if (!$post)
-			return;
+	function pushwoosh_save_post($ID, $post) {
 		/*
 		 * if update many posts, don't send push
 		 */
@@ -148,8 +146,8 @@
 			if (array_key_exists('pushwoosh_message_content', $_POST)) {
 				$message_content = $_POST['pushwoosh_message_content'];
 			}
-			update_post_meta($post->ID, 'pushwoosh_message_content', $message_content);
-			update_post_meta($post->ID, 'safari_title', $options['safari_title']);
+			update_post_meta($ID, 'pushwoosh_message_content', $message_content);
+			update_post_meta($ID, 'safari_title', $options['safari_title']);
 		}
 	}
 
@@ -177,7 +175,7 @@
 		}
 
 		$options['safari_url_args'] = array($post_url);
-		
+
 		$post = null;
 
 		if (!empty($_POST)) {
