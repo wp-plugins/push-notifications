@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.7
+     * @version 2.3.8
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.7
+    * Version: 2.3.8
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -56,6 +56,7 @@
 	// it can produce twice push send(if another plugins installed)
 	add_action('publish_post', 'pushwoosh_publish_post');
 	add_action('draft_post', 'pushwoosh_save_post');
+	add_action('pending_post', 'pushwoosh_save_post');
 
 	function pushwoosh_message_box($post) {
 
