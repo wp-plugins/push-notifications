@@ -43,6 +43,9 @@ Please see the <a href="http://www.pushwoosh.com/programming-push-notification/w
 = 2.3.6 =
 * Saving push notification data in widget for draft post
 
+= 2.3.7 =
+* Saving push notification data in widget for draft post
+
 == Installation ==
 1. Download the Pushwoosh plugin.
 2. Unzip and upload it to your plugins directory ("/wp-content/plugins" is default)
