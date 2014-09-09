@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.8
+     * @version 2.3.9
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.8
+    * Version: 2.3.9
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -162,20 +162,8 @@
 		}
 
 		$message_content = null;
-		$url = wp_get_shortlink();
 
-		if (!empty($url)) {
-			$url_array = explode('?', $url);
-			if(is_array($url_array) && array_key_exists(1, $url_array)) {
-				$post_url = '?' . $url_array[1];
-			} else {
-				$post_url = '';
-			}
-		}else {
-			$post_url = '';
-		}
-
-		$options['safari_url_args'] = array($post_url);
+		$options['safari_url_args'] = array('?p=' . $post_id);
 
 		$post = null;
 
