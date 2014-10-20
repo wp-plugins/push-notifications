@@ -4,7 +4,7 @@ Website link: http://www.pushwoosh.com
 Tags: pushwoosh, push notifications, push
 Arello Mobile: http://www.arello-mobile.com
 Requires at least: 3.0.1
-Tested up to: 3.9.1
+Tested up to: 4.0
 Stable tag: 2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -51,6 +51,9 @@ Please see the <a href="http://www.pushwoosh.com/programming-push-notification/w
 
 = 2.3.9 =
 * Refactoring get URL logic
+
+= 2.3.10 =
+* Refactoring plugin for shared hosting
 
 == Installation ==
 1. Download the Pushwoosh plugin.

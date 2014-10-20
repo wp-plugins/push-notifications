@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.9
+     * @version 2.3.10
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.9
+    * Version: 2.3.10
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,7 @@
 			$message_content = get_post_meta($post->ID, 'pushwoosh_message_content', true);
 			$safari_title = get_post_meta($post->ID, 'safari_title', true);
 		}
-		$plugin_content = file_get_contents(plugins_url('/html/pushwoosh.html', __FILE__));
+		$plugin_content = file_get_contents(plugin_dir_path(__FILE__) . '/html/pushwoosh.html');
 		echo sprintf($plugin_content,
 			$safari_title,
 			$safari_title_placeholder,
