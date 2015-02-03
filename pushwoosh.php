@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.10
+     * @version 2.3.11
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.10
+    * Version: 2.3.11
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -49,6 +49,28 @@
 			'side',
 			'high'
 		);
+
+		// add Pushwoosh meta box for all custom post types
+		$args = array(
+			'public'   => true,
+			'_builtin' => false
+		);
+		$output = 'names'; // names or objects, note names is the default
+		$operator = 'and'; // 'and' or 'or'
+		$post_types = get_post_types( $args, $output, $operator );
+		foreach ( $post_types  as $post_type ) {
+			add_meta_box(
+				'pushwoosh_section_id',
+				__('Pushwoosh notification', 'pushwoosh'),
+				'pushwoosh_message_box',
+				$post_type,
+				'side',
+				'high'
+			);
+			add_action('publish_' . $post_type, 'pushwoosh_publish_post');
+			add_action('draft_'. $post_type, 'pushwoosh_save_post');
+			add_action('pending_'. $post_type, 'pushwoosh_save_post');
+		}
 	}
 
 	add_action('admin_init', 'pushwoosh_add_meta_box');
