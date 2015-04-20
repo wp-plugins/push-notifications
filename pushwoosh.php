@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.11
+     * @version 2.3.12
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.11
+    * Version: 2.3.12
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -67,7 +67,11 @@
 				'side',
 				'high'
 			);
-			add_action('publish_' . $post_type, 'pushwoosh_publish_post');
+			add_action('draft_to_publish', 'pushwoosh_publish_post');
+			add_action('pending_to_publish', 'pushwoosh_publish_post');
+			add_action('auto-draft_to_publish', 'pushwoosh_publish_post');
+			add_action('publish_to_publish', 'pushwoosh_publish_post');
+
 			add_action('draft_'. $post_type, 'pushwoosh_save_post');
 			add_action('pending_'. $post_type, 'pushwoosh_save_post');
 		}
@@ -76,7 +80,11 @@
 	add_action('admin_init', 'pushwoosh_add_meta_box');
 	// do not use http://codex.wordpress.org/Plugin_API/Action_Reference/save_post
 	// it can produce twice push send(if another plugins installed)
-	add_action('publish_post', 'pushwoosh_publish_post');
+	add_action('draft_to_publish', 'pushwoosh_publish_post');
+	add_action('pending_to_publish', 'pushwoosh_publish_post');
+	add_action('auto-draft_to_publish', 'pushwoosh_publish_post');
+	add_action('publish_to_publish', 'pushwoosh_publish_post');
+
 	add_action('draft_post', 'pushwoosh_save_post');
 	add_action('pending_post', 'pushwoosh_save_post');
 
@@ -142,7 +150,7 @@
 		update_post_meta($post_id, 'pushwoosh_api_request', $status);
 	}
 
-	function pushwoosh_save_post($ID, $post) {
+	function pushwoosh_save_post($ID) {
 		/*
 		 * if update many posts, don't send push
 		 */
@@ -174,7 +182,7 @@
 		}
 	}
 
- 	function pushwoosh_publish_post($post_id) {
+ 	function pushwoosh_publish_post($post) {
 
 		/*
 		 * if update many posts, don't send push
@@ -185,6 +193,7 @@
 
 		$message_content = null;
 
+		$post_id = $post->ID;
 		$options['safari_url_args'] = array('?p=' . $post_id);
 
 		$post = null;
