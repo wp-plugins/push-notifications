@@ -2,7 +2,7 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.12
+     * @version 2.3.13
      */
 
     /**
@@ -11,7 +11,7 @@
     * Description: Push notifications plugin for wordpress by Pushwoosh
     * Author: Arello Mobile
     * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.12
+    * Version: 2.3.13
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -99,7 +99,7 @@
 		$post_type = $post->post_type;
 		$checkbox_label = sprintf('Send a push notification when the %s is published', htmlentities($post_type));
 		$textarea_placeholder = 'Input text of the push here, otherwise, the post title will be used.';
-		$safari_title_placeholder = 'Safari title';
+		$safari_title_placeholder = 'Chrome/Safari title';
 		$checkbox_checked = 'checked="checked"';
 		$message_content = '';
 		$safari_title = '';
@@ -124,6 +124,7 @@
 	function pushwoosh_send_push_by_post($post_id, $message_content, $options=array()) {
 
 		$application_code = get_option('pushwoosh_application_code', array('text_string' => null));
+		$chrome_icon = get_option('pushwoosh_chrome_default_icon', array('text_string' => null));
 		$api_token = get_option('pushwoosh_api_token', array('text_string' => null));
 		$safari_action = get_option('pushwoosh_safari_action', array('text_string' => null));
 		$options['safari_action'] = $safari_action['text_string'];
@@ -136,6 +137,10 @@
 				$options['safari_title'] = $safari_title['text_string'];
 			}
 		}
+		$options['chrome_title'] = $options['safari_title'];
+		$chrome_icon = $chrome_icon['text_string'];
+		if ($chrome_icon)
+			$options['chrome_icon'] = $chrome_icon;
 
 		$pushwoosh  = new Pushwoosh(array('auth' => $api_token['text_string']));
 
@@ -177,6 +182,8 @@
 			if (array_key_exists('pushwoosh_message_content', $_POST)) {
 				$message_content = $_POST['pushwoosh_message_content'];
 			}
+			$options['chrome_title'] = $options['safari_title'];
+
 			update_post_meta($ID, 'pushwoosh_message_content', $message_content);
 			update_post_meta($ID, 'safari_title', $options['safari_title']);
 		}
