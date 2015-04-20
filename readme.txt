@@ -58,6 +58,12 @@ Please see the <a href="http://www.pushwoosh.com/programming-push-notification/w
 = 2.3.11 =
 * Add support of custom post types
 
+= 2.3.12 =
+* Fix error with un-trashed posts
+
+= 2.3.13 =
+* Chrome icon and title support
+
 == Installation ==
 1. Download the Pushwoosh plugin.
 2. Unzip and upload it to your plugins directory ("/wp-content/plugins" is default)

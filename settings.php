@@ -25,10 +25,14 @@ class PushwooshConfig {
 					'label' => 'Application code',
 					'description' => 'Your Pushwoosh application ID you send the message to.',
 					),
+				'chrome_default_icon' => array(
+					'label' => 'Chrome Icon',
+					'description' => 'Full URL to icon',
+				),
 				'safari_title' => array(
-					'label' => 'Safari Title',
-					'description' => 'If you do not wish to manually input Safari Title every time, you can specify 
-					the default title here. If you publish a post with a blank Safari Title field, 
+					'label' => 'Chrome/Safari Title',
+					'description' => 'If you do not wish to manually input Chrome/Safari Title every time, you can specify
+					the default title here. If you publish a post with a blank Chrome/Safari Title field,
 					the URL of your website is used as default title.'
 					),
 				'safari_action' => array(
