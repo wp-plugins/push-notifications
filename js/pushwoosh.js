@@ -1,11 +1,11 @@
 function showLengthOver() {
-	max_length = 25;
-	critical_color = 'red';
-	default_color = '#b1b6c3';
-	safari_title = document.getElementById('pushwoosh_safari_title');
+	var max_length = 25;
+	var critical_color = 'red';
+	var default_color = '#b1b6c3';
+	var safari_title = document.getElementById('pushwoosh_safari_title');
 	if (safari_title != undefined) {
-		title_length = safari_title.value.length;
-		result = max_length - title_length;
+		var title_length = safari_title.value.length;
+		var result = max_length - title_length;
 		if (result < 6) {
 			document.getElementById('pushwoosh_length_over').style.color = critical_color;
 		} else {

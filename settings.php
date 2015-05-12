@@ -7,7 +7,7 @@ class PushwooshConfig {
 	public $page = array(
 		'name' => 'pushwoosh',
 		'title' => 'Pushwoosh Settings',
-		'intro_text' => 'Configuration options for Pushwoosh, you must have a <a href="http://www.pushwoosh.com/accounts-comparison/">Premium account</a> with Pushwoosh to use this plugin',
+		'intro_text' => 'Configuration options for Pushwoosh, you must have a <a href="https://www.pushwoosh.com/pricing/">Premium account</a> with Pushwoosh to use this plugin',
 		'menu_title' => 'Pushwoosh'
 	);
 

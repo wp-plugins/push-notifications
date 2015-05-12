@@ -2,16 +2,16 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.13
+     * @version 2.3.14
      */
 
     /**
     * Plugin Name: Pushwoosh
     * Plugin URI: http://wordpress.org/plugins/push-notifications/
     * Description: Push notifications plugin for wordpress by Pushwoosh
-    * Author: Arello Mobile
-    * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.13
+    * Author: Pushwoosh, Inc
+    * Author URI: https://www.pushwoosh.com/
+    * Version: 2.3.14
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -202,6 +202,8 @@
 
 		$post_id = $post->ID;
 		$options['safari_url_args'] = array('?p=' . $post_id);
+		$options['link'] = get_permalink($post_id);
+		$options['minimize_link'] = 0;
 
 		$post = null;
 
