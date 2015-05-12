@@ -2,16 +2,16 @@
 
     /**
      * @package Pushwoosh
-     * @version 2.3.11
+     * @version 2.3.14
      */
 
     /**
     * Plugin Name: Pushwoosh
     * Plugin URI: http://wordpress.org/plugins/push-notifications/
     * Description: Push notifications plugin for wordpress by Pushwoosh
-    * Author: Arello Mobile
-    * Author URI: http://www.arello-mobile.com/
-    * Version: 2.3.11
+    * Author: Pushwoosh, Inc
+    * Author URI: https://www.pushwoosh.com/
+    * Version: 2.3.14
     *
     * Copyright 2014 Arello Mobile (email: support@arello-mobile.com)
     * This program is free software; you can redistribute it and/or modify
@@ -67,7 +67,11 @@
 				'side',
 				'high'
 			);
-			add_action('publish_' . $post_type, 'pushwoosh_publish_post');
+			add_action('draft_to_publish', 'pushwoosh_publish_post');
+			add_action('pending_to_publish', 'pushwoosh_publish_post');
+			add_action('auto-draft_to_publish', 'pushwoosh_publish_post');
+			add_action('publish_to_publish', 'pushwoosh_publish_post');
+
 			add_action('draft_'. $post_type, 'pushwoosh_save_post');
 			add_action('pending_'. $post_type, 'pushwoosh_save_post');
 		}
@@ -76,7 +80,11 @@
 	add_action('admin_init', 'pushwoosh_add_meta_box');
 	// do not use http://codex.wordpress.org/Plugin_API/Action_Reference/save_post
 	// it can produce twice push send(if another plugins installed)
-	add_action('publish_post', 'pushwoosh_publish_post');
+	add_action('draft_to_publish', 'pushwoosh_publish_post');
+	add_action('pending_to_publish', 'pushwoosh_publish_post');
+	add_action('auto-draft_to_publish', 'pushwoosh_publish_post');
+	add_action('publish_to_publish', 'pushwoosh_publish_post');
+
 	add_action('draft_post', 'pushwoosh_save_post');
 	add_action('pending_post', 'pushwoosh_save_post');
 
@@ -91,7 +99,7 @@
 		$post_type = $post->post_type;
 		$checkbox_label = sprintf('Send a push notification when the %s is published', htmlentities($post_type));
 		$textarea_placeholder = 'Input text of the push here, otherwise, the post title will be used.';
-		$safari_title_placeholder = 'Safari title';
+		$safari_title_placeholder = 'Chrome/Safari title';
 		$checkbox_checked = 'checked="checked"';
 		$message_content = '';
 		$safari_title = '';
@@ -116,6 +124,7 @@
 	function pushwoosh_send_push_by_post($post_id, $message_content, $options=array()) {
 
 		$application_code = get_option('pushwoosh_application_code', array('text_string' => null));
+		$chrome_icon = get_option('pushwoosh_chrome_default_icon', array('text_string' => null));
 		$api_token = get_option('pushwoosh_api_token', array('text_string' => null));
 		$safari_action = get_option('pushwoosh_safari_action', array('text_string' => null));
 		$options['safari_action'] = $safari_action['text_string'];
@@ -128,6 +137,10 @@
 				$options['safari_title'] = $safari_title['text_string'];
 			}
 		}
+		$options['chrome_title'] = $options['safari_title'];
+		$chrome_icon = $chrome_icon['text_string'];
+		if ($chrome_icon)
+			$options['chrome_icon'] = $chrome_icon;
 
 		$pushwoosh  = new Pushwoosh(array('auth' => $api_token['text_string']));
 
@@ -142,7 +155,7 @@
 		update_post_meta($post_id, 'pushwoosh_api_request', $status);
 	}
 
-	function pushwoosh_save_post($ID, $post) {
+	function pushwoosh_save_post($ID) {
 		/*
 		 * if update many posts, don't send push
 		 */
@@ -169,12 +182,14 @@
 			if (array_key_exists('pushwoosh_message_content', $_POST)) {
 				$message_content = $_POST['pushwoosh_message_content'];
 			}
+			$options['chrome_title'] = $options['safari_title'];
+
 			update_post_meta($ID, 'pushwoosh_message_content', $message_content);
 			update_post_meta($ID, 'safari_title', $options['safari_title']);
 		}
 	}
 
- 	function pushwoosh_publish_post($post_id) {
+ 	function pushwoosh_publish_post($post) {
 
 		/*
 		 * if update many posts, don't send push
@@ -185,7 +200,10 @@
 
 		$message_content = null;
 
+		$post_id = $post->ID;
 		$options['safari_url_args'] = array('?p=' . $post_id);
+		$options['link'] = get_permalink($post_id);
+		$options['minimize_link'] = 0;
 
 		$post = null;
 
